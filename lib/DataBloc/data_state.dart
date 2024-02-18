@@ -8,5 +8,4 @@ part of 'data_bloc.dart';
 
 class DataInitial extends DataState {
   DataInitial({ required super.datalist});
-
 }

@@ -27,10 +27,22 @@ class DeleteItem extends DataEvent {
   final String email;
   final num id;
 
-
   DeleteItem({
     required this.email,
     required this.id
 
+  });
+}
+  class EditItem extends DataEvent {
+  final String email;
+  final String description;
+  final String title;
+  final String imgLink;
+
+  EditItem({
+  required this.email,
+  required this.description,
+  required this.title,
+  required this.imgLink,
   });
 }

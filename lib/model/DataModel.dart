@@ -32,5 +32,4 @@ class DataModel {
     map['email'] = email;
     return map;
   }
-
 }

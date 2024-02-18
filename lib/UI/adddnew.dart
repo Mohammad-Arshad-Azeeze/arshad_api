@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
-import 'DataBloc/data_bloc.dart';
+import '../DataBloc/data_bloc.dart';
 
 class AddItemPage extends StatefulWidget {
   @override
@@ -16,9 +16,6 @@ class _AddItemPageState extends State<AddItemPage> {
   final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _imgLinkController = TextEditingController();
-
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -57,7 +54,6 @@ class _AddItemPageState extends State<AddItemPage> {
               Navigator.of(context).pushReplacement(
                 MaterialPageRoute(builder: (context) => MyHomePage(title: 'Home',)),
               );
-            //  }
               },
               child: Text('Add Item'),
             ),

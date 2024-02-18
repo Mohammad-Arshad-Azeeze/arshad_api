@@ -1,9 +1,11 @@
 import 'package:arshad/DataBloc/data_bloc.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'adddnew.dart';
+import 'UI/adddnew.dart';
 import 'model/DataModel.dart';
+import 'UI/edit_item.dart';
 
 void main() {
   runApp(MultiBlocProvider(
@@ -26,40 +28,16 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'Home'),
+      home: const MyHomePage(title: 'Load Item'),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
 
   final String? title;
 
@@ -75,28 +53,87 @@ class _MyHomePageState extends State<MyHomePage> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(widget.title ?? "Home"),
       ),
+      body: Center(
+        child: Container(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text("Press the button to fetch data"),
+              FloatingActionButton(
+                onPressed: () {
+                  Navigator.pushReplacement(
+                    context,
+                    CupertinoPageRoute(builder: (context) => MyHomePage1(title: 'title',)),
+                  );
+                },
+                tooltip: 'Load Item',
+                child: const Icon(Icons.refresh_rounded),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class MyHomePage1 extends StatefulWidget {
+  const MyHomePage1({super.key, required this.title});
+
+  final String? title;
+
+  @override
+  State<MyHomePage1> createState() => _MyHomePageState1();
+}
+
+class _MyHomePageState1 extends State<MyHomePage1> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        title: Text("API USING BLOC"),
+      ),
       body: BlocBuilder<DataBloc, DataState>(
         builder: (context, state) {
           return state.datalist!.isNotEmpty
               ? ListView.builder(
-                  itemCount: state.datalist?.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    DataModel model = state.datalist![index];
-                    return ListTile(
-                      leading: CircleAvatar(
-                        backgroundImage: NetworkImage('${model.imgLink}',scale: 1.0),
-                      ),
-                      title: Text("${model.title}"),
-                      subtitle: Text("${model.description}"),
-                      trailing: IconButton(icon: Icon(Icons.delete), onPressed: () {
-                        context.read<DataBloc>().add(DeleteItem(email: model.email.toString(), id: model.id!));
-                      },),
-                    );
-                  },
-                )
+            itemCount: state.datalist?.length,
+            itemBuilder: (BuildContext context, int index) {
+              DataModel model = state.datalist![index];
+              return ListTile(
+                  leading: CircleAvatar(
+                    backgroundImage:
+                    NetworkImage('${model.imgLink}', scale: 1.0),
+                  ),
+                  title: Text("${model.title}"),
+                  subtitle: Text("${model.description}"),
+                  trailing: Wrap(spacing: -15, children: [
+                    IconButton(
+                      icon: Icon(Icons.delete),
+                      onPressed: () {
+                        context.read<DataBloc>().add(DeleteItem(
+                            email: model.email.toString(),
+                            id: model.id!));
+                      },
+                    ),
+                    IconButton(
+                      icon: Icon(Icons.edit_sharp),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => EditItemPage()),
+                        );
+                      },
+                    ),
+                  ]));
+            },
+          )
               : Center(child: CircularProgressIndicator());
         },
       ),
+
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.push(
@@ -106,7 +143,9 @@ class _MyHomePageState extends State<MyHomePage> {
         },
         tooltip: 'add new item',
         child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+      ),
     );
   }
 }
+
+
